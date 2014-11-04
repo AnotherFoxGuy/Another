@@ -1,21 +1,17 @@
 //UnnamedGameProject
 
 public var MoveTo : Transform;
+/*
 public var idleAnimation : AnimationClip;
 public var walkAnimation : AnimationClip;
 public var runAnimation : AnimationClip;
 public var jumpPoseAnimation : AnimationClip;
+*/
 
 public var stoppingDistance : float;
 
-
-
 private var CurrText = "";
-
 private var Used = true;
-
-
-
 private var agent: NavMeshAgent;
 
 
@@ -39,11 +35,11 @@ function Update () {
 		}
 	CurrText = CurrText+ " @ "+agent.remainingDistance;
 	if (agent.remainingDistance >= stoppingDistance){
-		animation.Play(walkAnimation.name);
+		//animation.Play(walkAnimation.name);
 
 	}
 	else{
-		animation.Play(idleAnimation.name);
+		//animation.Play(idleAnimation.name);
 	}
 
 }
