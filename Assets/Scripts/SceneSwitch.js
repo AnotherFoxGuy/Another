@@ -1,30 +1,30 @@
 ﻿#pragma strict
 
 public var LoadScene : String;
-public var ButtonText : String;
+public var TextBoxText : String;
 
-private var ShowButton = false;
+private var ShowTextBox = false;
 
 @script RequireComponent (Collider)
 
 
 function OnTriggerEnter(){
-  ShowButton = true;
+  ShowTextBox = true;
 
 }
 function OnTriggerExit(){
-  ShowButton = false;
+  ShowTextBox = false;
 
 }
 
 function OnGUI () {
-  if (ShowButton){
-    // Make a background box
-    //GUI.Box (Rect (10,10,100,90), "Loader Menu");
-
-    // Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
-    if (GUI.Button (Rect (Screen.width/3,Screen.height/3,Screen.width/3,Screen.height/3), ButtonText)) {
-        Application.LoadLevel (LoadScene);
-    }
+  if (ShowTextBox){
+    GUI.Box (Rect (Screen.width/2,Screen.height/2,200,150), TextBoxText);
   }
+}
+function Update(){
+  if(ShowTextBox && Input.GetButtonDown("Submit")){
+      print("LoadLevel "+LoadScene);
+      Application.LoadLevel (LoadScene);
+    }
 }
