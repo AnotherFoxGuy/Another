@@ -25,7 +25,7 @@ function Update () {
 	agent.SetDestination(MoveTo.position);
 
 
-	if(agent.remainingDistance >= 999999999999999999){
+	if(agent.remainingDistance >= Mathf.Infinity){
 			CurrText = "I cant see you";
 			//agent.Stop();
 			//animation.Play(idleAnimation.name);
@@ -46,7 +46,7 @@ function Update () {
 
 
 function OnGUI () {
-    GUI.Label (Rect (25, 25, 100, 30), CurrText);
+    GUI.Label (Rect (25, 25, 100, 60), CurrText);
 }
 
 function OnTriggerEnter () {

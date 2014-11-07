@@ -11,15 +11,18 @@ function OnGUI () {
 }
 
 function Update(){
-  var ray = Camera.main.ScreenPointToRay (Vector3(Screen.width/2,Screen.width/2, 0));
+  var ray = Camera.main.transform.position;
   var hit : RaycastHit;
+  var tmpPos = Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
   //var otherObj :
-  if (Physics.Raycast (ray, hit, 5))
-  //Debug.DrawLine (ray.origin, hit.point);
-    {
+  if (Physics.Raycast (tmpPos,transform.TransformDirection(Vector3.forward), hit, 5)){
+  Debug.DrawLine (tmpPos, hit.point);
     if(hit.transform.tag == "Key"){
       //print("Hit key");
       ShowTextBox = true;
+    }
+    else{
+      ShowTextBox = false;
     }
   }
   else{
@@ -33,24 +36,4 @@ if(ShowTextBox && Input.GetButtonDown("Submit")){
     KeysFound++;
   }
 }
-
-
 }
-/*
-function OnTriggerEnter(otherObj: Collider) {
-  print("col @ "+otherObj);
-
-    if (otherObj.transform.tag == "Key") {
-        Destroy (otherObj.gameObject);
-        KeysFound++;
-    }
-}
-
-function Update() {
-	var ray = Camera.main.ScreenPointToRay (Vector3(Screen.width/2,Screen.width/2, 0));
-	var hit : RaycastHit;
-	if (Physics.Raycast (ray, hit, 10)) {
-		Debug.DrawLine (ray.origin, hit.point);
-	}
-}
-*/
