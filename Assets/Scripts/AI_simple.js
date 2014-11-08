@@ -26,7 +26,7 @@ function Update () {
 
 
 	if(agent.remainingDistance >= Mathf.Infinity){
-			CurrText = "I cant see you";
+			CurrText = "I can't see you";
 			//agent.Stop();
 			//animation.Play(idleAnimation.name);
 	}
@@ -34,12 +34,13 @@ function Update () {
 			CurrText = "I can see you";
 		}
 	CurrText = CurrText+ " @ "+agent.remainingDistance;
-	if (agent.remainingDistance >= stoppingDistance){
+	if (agent.remainingDistance >= stoppingDistance && !audio.isPlaying){
 		//animation.Play(walkAnimation.name);
-
+		audio.Play();
 	}
 	else{
 		//animation.Play(idleAnimation.name);
+		audio.Pause();
 	}
 
 }
