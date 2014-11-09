@@ -1,60 +1,60 @@
 //UnnamedGameProject
 
+//@script RequireComponent (NavMeshAgent)
+//@script RequireComponent ()
+
 public var MoveTo : Transform;
+public var IdleTime = 2;
+
 /*
 public var idleAnimation : AnimationClip;
 public var walkAnimation : AnimationClip;
 public var runAnimation : AnimationClip;
 public var jumpPoseAnimation : AnimationClip;
 */
+private var nextPath = 0.0;
 
-public var stoppingDistance : float;
+private var stoppingDistance = 1;
 
 private var CurrText = "";
 private var Used = true;
+private var Called = true;
 private var agent: NavMeshAgent;
 
 
 function Start () {
 	agent = GetComponent.<NavMeshAgent>();
 	agent.stoppingDistance = stoppingDistance;
+	var RandomPosition = Vector3(Random.Range(-20.0, 20.0), Random.Range(0.0, 10.0), Random.Range(-20.0, 20.0));
+	agent.SetDestination(RandomPosition);
 }
 
 function Update () {
-
-	agent.SetDestination(MoveTo.position);
-
-
-	if(agent.remainingDistance >= Mathf.Infinity){
-			CurrText = "I can't see you";
-			//agent.Stop();
-			//animation.Play(idleAnimation.name);
-	}
-	else{
+	var hit: NavMeshHit;
+		if (!agent.Raycast(MoveTo.position, hit)) {
+			//agent.SetDestination(MoveTo.position);
 			CurrText = "I can see you";
 		}
-	CurrText = CurrText+ " @ "+agent.remainingDistance;
-	if (agent.remainingDistance >= stoppingDistance && !audio.isPlaying){
-		//animation.Play(walkAnimation.name);
-		audio.Play();
-	}
-	else{
-		//animation.Play(idleAnimation.name);
-		audio.Pause();
-	}
-
+		else{
+				CurrText = "I can't see you";
+		}
+		if (Time.time > nextPath) {
+			var RandomPosition = Vector3(Random.Range(-20.0, 20.0), Random.Range(0.0, 10.0), Random.Range(-20.0, 20.0));
+			agent.SetDestination(RandomPosition);
+			//print(RandomPosition+" "+nextPath);
+			nextPath = Mathf.Infinity;
+		}
+		if (agent.remainingDistance < 2 && !Called) {
+			nextPath = Time.time + IdleTime;
+			//print(nextPath);
+			Called = true;
+		}
+		if (agent.remainingDistance > 2 && Called) {
+			Called = false;
+		}
 }
 
 
 function OnGUI () {
-    GUI.Label (Rect (25, 25, 100, 60), CurrText);
-}
-
-function OnTriggerEnter () {
-	//Used = false;
-	//agent.Stop();
-}
-
-function OnTriggerExit () {
-	//Used = true;
+    GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
 }

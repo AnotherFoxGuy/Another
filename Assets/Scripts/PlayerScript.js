@@ -4,7 +4,7 @@ private var KeysFound = 0;
 private var ShowTextBox = false;
 
 function OnGUI () {
-  GUI.Box (Rect (Screen.width - 250,100,200,100), "Key found "+KeysFound);
+  GUI.Box (Rect (10,10,100,50), "Key found "+KeysFound);
   if(ShowTextBox){
     GUI.Box (Rect (Screen.width/2,Screen.height/2,100,50), " Key ");
   }

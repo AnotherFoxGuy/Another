@@ -20,14 +20,12 @@ function Update () {
 
 function OnGUI () {
   if(GUIText.enabled){
-      // Make a background box
-      // Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
-      if (GUI.Button (Rect (Screenwidth-50,Screenheight-50,80,20), "Resume")) {
+  GUI.Label (Rect (Screenwidth-50,Screenheight-50,80,20),"Quit ?");
+
+      if (GUI.Button (Rect (Screenwidth+50,Screenheight-25,80,20), "No")) {
         GUIText.enabled = !GUIText.enabled;
       }
-
-      // Make the second button.
-      if (GUI.Button (Rect (Screenwidth-50,Screenheight+50 ,80,20), "Quit")) {
+      if (GUI.Button (Rect (Screenwidth-50,Screenheight-25 ,80,20), "Yes") || Input.GetButtonDown("Submit")) {
          Application.Quit();
       }
   }
