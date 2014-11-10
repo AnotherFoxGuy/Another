@@ -1,14 +1,9 @@
 ﻿#pragma strict
 
-private var KeysFound = 0;
+private var AmountKeysFound = 0;
 private var ShowTextBox = false;
-
-function OnGUI () {
-  GUI.Box (Rect (10,10,100,50), "Key found "+KeysFound);
-  if(ShowTextBox){
-    GUI.Box (Rect (Screen.width/2,Screen.height/2,100,50), " Key ");
-  }
-}
+private var KeysFound = new Hashtable();
+private var TextBoxText = "Door";
 
 function Update(){
   var ray = Camera.main.transform.position;
@@ -20,6 +15,18 @@ function Update(){
     if(hit.transform.tag == "Key"){
       //print("Hit key");
       ShowTextBox = true;
+      TextBoxText = "Key";
+    }
+    else if(hit.transform.tag == "Door"){
+      //print("Hit key");
+      ShowTextBox = true;
+      if(KeysFound.ContainsValue(hit.collider.name+"(Clone)")){
+        TextBoxText = "Open Door";
+      }
+      else{
+        TextBoxText = "No key";
+      }
+
     }
     else{
       ShowTextBox = false;
@@ -29,11 +36,23 @@ function Update(){
     ShowTextBox = false;
   }
 
-if(ShowTextBox && Input.GetButtonDown("Submit")){
-    if(hit.transform.tag == "Key"){
-    print("Found a key");
-    Destroy (hit.collider.gameObject);
-    KeysFound++;
-  }
+  if(ShowTextBox && Input.GetButtonDown("Submit")){
+      if(hit.transform.tag == "Key"){
+        print("Found a key");
+        Destroy (hit.collider.gameObject);
+        AmountKeysFound++;
+        KeysFound.Add(AmountKeysFound,hit.collider.name);
+      }
+      if(hit.transform.tag == "Door"){
+        if(KeysFound.ContainsValue(hit.collider.name+"(Clone)"))
+          Destroy (hit.collider.gameObject);
+      }
+    }
 }
+
+function OnGUI () {
+  GUI.Box (Rect (10,10,100,50), "Key found "+AmountKeysFound);
+  if(ShowTextBox){
+    GUI.Box (Rect (Screen.width/2,Screen.height/2,100,50), TextBoxText);
+  }
 }
