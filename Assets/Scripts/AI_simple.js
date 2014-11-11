@@ -14,13 +14,12 @@ public var jumpPoseAnimation : AnimationClip;
 */
 private var nextPath = 0.0;
 
-private var stoppingDistance = 1;
+private var stoppingDistance = 1.5;
 
 private var CurrText = "";
 private var Used = true;
 private var Called = true;
 private var agent: NavMeshAgent;
-
 
 function Start () {
 	agent = GetComponent.<NavMeshAgent>();
@@ -32,7 +31,7 @@ function Start () {
 function Update () {
 	var hit: NavMeshHit;
 		if (!agent.Raycast(MoveTo.position, hit)) {
-			//agent.SetDestination(MoveTo.position);
+			agent.SetDestination(MoveTo.position);
 			CurrText = "I can see you";
 		}
 		else{
@@ -44,16 +43,21 @@ function Update () {
 			//print(RandomPosition+" "+nextPath);
 			nextPath = Mathf.Infinity;
 		}
-		if (agent.remainingDistance < 2 && !Called) {
+		if (agent.remainingDistance < stoppingDistance && !Called) {
 			nextPath = Time.time + IdleTime;
 			//print(nextPath);
 			Called = true;
 		}
-		if (agent.remainingDistance > 2 && Called) {
+		if (agent.remainingDistance > stoppingDistance && Called) {
 			Called = false;
 		}
+		Debug.DrawLine (agent.destination, transform.position);
 }
 
+function OnTriggerEnter (player : Collider) {
+  if(player.gameObject.tag == "Player")
+    Application.LoadLevel(Application.loadedLevel);
+}
 
 function OnGUI () {
     GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);

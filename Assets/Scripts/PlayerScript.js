@@ -5,6 +5,11 @@ private var ShowTextBox = false;
 private var KeysFound = new Hashtable();
 private var TextBoxText = "Door";
 
+function Start () {
+  KeysFound.Add(AmountKeysFound,"Nokey");
+}
+
+
 function Update(){
   var ray = Camera.main.transform.position;
   var hit : RaycastHit;
@@ -20,13 +25,12 @@ function Update(){
     else if(hit.transform.tag == "Door"){
       //print("Hit key");
       ShowTextBox = true;
-      if(KeysFound.ContainsValue(hit.collider.name+"(Clone)")){
+      if(KeysFound.ContainsValue(hit.collider.name)){
         TextBoxText = "Open Door";
       }
       else{
         TextBoxText = "No key";
       }
-
     }
     else{
       ShowTextBox = false;
@@ -44,8 +48,9 @@ function Update(){
         KeysFound.Add(AmountKeysFound,hit.collider.name);
       }
       if(hit.transform.tag == "Door"){
-        if(KeysFound.ContainsValue(hit.collider.name+"(Clone)"))
-          Destroy (hit.collider.gameObject);
+        if(KeysFound.ContainsValue(hit.collider.name))
+          //Destroy (hit.collider.gameObject);
+          hit.collider.rigidbody.AddForce (transform.TransformDirection(Vector3.forward*3000));
       }
     }
 }

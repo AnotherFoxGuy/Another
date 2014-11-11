@@ -7,15 +7,15 @@ private var Screenheight = Screen.height/2;
 
 function Start () {
   GUIText = GetComponent(GUITexture);
+  Screen.showCursor = false;
 
 }
 
 function Update () {
   if(Input.GetButtonDown("Escape")){
     GUIText.enabled = !GUIText.enabled;
-
+    Screen.showCursor = !Screen.showCursor;
   }
-
 }
 
 function OnGUI () {
