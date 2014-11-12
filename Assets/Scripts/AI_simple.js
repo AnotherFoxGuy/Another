@@ -20,6 +20,7 @@ private var CurrText = "";
 private var Used = true;
 private var Called = true;
 private var agent: NavMeshAgent;
+private var NoKill = true;
 
 function Start () {
 	agent = GetComponent.<NavMeshAgent>();
@@ -43,19 +44,19 @@ function Update () {
 			//print(RandomPosition+" "+nextPath);
 			nextPath = Mathf.Infinity;
 		}
-		if (agent.remainingDistance < stoppingDistance && !Called) {
+		if (agent.remainingDistance <= stoppingDistance && !Called) {
 			nextPath = Time.time + IdleTime;
 			//print(nextPath);
 			Called = true;
 		}
-		if (agent.remainingDistance > stoppingDistance && Called) {
+		if (agent.remainingDistance >= stoppingDistance && Called) {
 			Called = false;
 		}
 		Debug.DrawLine (agent.destination, transform.position);
 }
 
 function OnTriggerEnter (player : Collider) {
-  if(player.gameObject.tag == "Player")
+  if(player.gameObject.tag == "Player" && !NoKill)
     Application.LoadLevel(Application.loadedLevel);
 }
 

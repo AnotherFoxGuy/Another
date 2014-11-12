@@ -1,4 +1,4 @@
-﻿#pragma strict
+#pragma strict
 
 private var AmountKeysFound = 0;
 private var ShowTextBox = false;
@@ -22,7 +22,7 @@ function Update(){
       ShowTextBox = true;
       TextBoxText = "Key";
     }
-    else if(hit.transform.tag == "Door"){
+    else if(hit.transform.tag == "Door" && hit.transform.hingeJoint.limits.max == 0){
       //print("Hit key");
       ShowTextBox = true;
       if(KeysFound.ContainsValue(hit.collider.name)){
@@ -48,9 +48,11 @@ function Update(){
         KeysFound.Add(AmountKeysFound,hit.collider.name);
       }
       if(hit.transform.tag == "Door"){
-        if(KeysFound.ContainsValue(hit.collider.name))
-          //Destroy (hit.collider.gameObject);
-          hit.collider.rigidbody.AddForce (transform.TransformDirection(Vector3.forward*3000));
+        if(KeysFound.ContainsValue(hit.collider.name)){
+          //hit.collider.transform.eulerAngles+=Vector3(0, 90, 0);
+          //hit.transform.collider.isTrigger = true;
+          hit.transform.hingeJoint.limits.max = 90;
+        }
       }
     }
 }
