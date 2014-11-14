@@ -25,10 +25,10 @@ function OnTriggerExit(){
 function OnGUI () {
   if (ShowTextBox){
     if (!CanLoadLevel){
-    GUI.Box (Rect (Screen.width/2,Screen.height/2,200,150), "You haven't found all keys yet!");
+    GUI.Box (Rect (Screen.width/2-100,Screen.height/2-75,200,150), "You haven't found all keys yet!");
     }
     else{
-    GUI.Box (Rect (Screen.width/2,Screen.height/2,200,150), TextBoxText);
+    GUI.Box (Rect (Screen.width/2-100,Screen.height/2-75,200,150), TextBoxText);
     }
   }
 }

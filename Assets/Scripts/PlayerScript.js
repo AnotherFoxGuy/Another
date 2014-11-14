@@ -41,25 +41,23 @@ function Update(){
   }
 
   if(ShowTextBox && Input.GetButtonDown("Submit")){
-      if(hit.transform.tag == "Key"){
-        print("Found a key");
-        Destroy (hit.collider.gameObject);
-        AmountKeysFound++;
-        KeysFound.Add(AmountKeysFound,hit.collider.name);
-      }
-      if(hit.transform.tag == "Door"){
-        if(KeysFound.ContainsValue(hit.collider.name)){
-          //hit.collider.transform.eulerAngles+=Vector3(0, 90, 0);
-          //hit.transform.collider.isTrigger = true;
-          hit.transform.hingeJoint.limits.max = 90;
-        }
+    if(hit.transform.tag == "Key"){
+      print("Found a key");
+      Destroy (hit.collider.gameObject);
+      AmountKeysFound++;
+      KeysFound.Add(AmountKeysFound,hit.collider.name);
+    }
+    if(hit.transform.tag == "Door"){
+      if(KeysFound.ContainsValue(hit.collider.name)){
+        hit.transform.hingeJoint.limits.max = 90;
       }
     }
+  }
 }
 
 function OnGUI () {
   GUI.Box (Rect (10,10,100,50), "Key found "+AmountKeysFound);
   if(ShowTextBox){
-    GUI.Box (Rect (Screen.width/2,Screen.height/2,100,50), TextBoxText);
+    GUI.Box (Rect (Screen.width/2-50,Screen.height/2-25,100,50), TextBoxText);
   }
 }
