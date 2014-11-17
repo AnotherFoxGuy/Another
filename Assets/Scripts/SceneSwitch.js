@@ -2,6 +2,7 @@
 
 public var LoadScene : String;
 public var TextBoxText : String;
+public var NeedKeys = false;
 
 private var ShowTextBox = false;
 private var CanLoadLevel = false;
@@ -11,10 +12,15 @@ private var CanLoadLevel = false;
 
 function OnTriggerEnter(){
   ShowTextBox = true;
-  var gos : GameObject[];
-  gos = GameObject.FindGameObjectsWithTag("Key");
-  if (gos.length == 0) {
-      CanLoadLevel = true;
+  if (NeedKeys){
+    var gos : GameObject[];
+    gos = GameObject.FindGameObjectsWithTag("Key");
+    if (gos.length == 0) {
+        CanLoadLevel = true;
+    }
+  }
+  else{
+    CanLoadLevel = true;
   }
 }
 function OnTriggerExit(){

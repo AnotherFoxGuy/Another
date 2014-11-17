@@ -4,14 +4,9 @@
 
 public var MoveTo : Transform;
 public var IdleTime = 2;
-public var NoKill = false;
-
-/*
-public var idleAnimation : AnimationClip;
-public var walkAnimation : AnimationClip;
-public var runAnimation : AnimationClip;
-public var jumpPoseAnimation : AnimationClip;
-*/
+public var GodMode = false;
+public var FootSteps : AudioClip;
+public var SoundDead : AudioClip;
 
 private var nextPath = 0.0;
 private var TimeUntilLevelReload = Mathf.Infinity;
@@ -21,6 +16,7 @@ private var Used = true;
 private var Called = true;
 private var Killed = false;
 private var agent: NavMeshAgent;
+private var SoundHashtable = new Hashtable();
 
 
 function Start () {
@@ -35,6 +31,7 @@ function Update () {
 		if (!agent.Raycast(MoveTo.position, hit)) {
 			agent.SetDestination(MoveTo.position);
 			CurrText = "I can see you";
+			PlaySoundIfNotPlaying(FootSteps);
 		}
 		else{
 			CurrText = "I can not see you";
@@ -60,15 +57,23 @@ function Update () {
 }
 
 function OnTriggerEnter (player : Collider) {
-  if(player.gameObject.tag == "Player" && !NoKill){
+  if(player.gameObject.tag == "Player" && !GodMode){
 		TimeUntilLevelReload = Time.time + 2;
 		Killed = true;
 	}
 }
 
 function OnGUI () {
-    GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
+  GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
 		if(Killed){
 			GUI.Box (Rect (Screen.width/2-100,Screen.height/2-30, 200, 60), "you are kill");
+			PlaySoundIfNotPlaying(SoundDead);
 		}
+}
+function PlaySoundIfNotPlaying(CurrentSound :AudioClip){
+ 	if (!audio.isPlaying){
+		audio.clip = CurrentSound;
+		audio.Play();
+		//print("Play Sound");
+	}
 }
