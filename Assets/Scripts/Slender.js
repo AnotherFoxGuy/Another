@@ -1,12 +1,14 @@
 ﻿#pragma strict
 
+/*
+dist > 5 &&
+*/
 
 public var MoveTo : Transform;
 private var textboxtext = "";
 private var FoundPlace = false;
 
 function Start () {
-  transform.renderer.material.color = Color.red;
 }
 
 function Update () {
@@ -28,11 +30,11 @@ function Update () {
   }
 
 }
-
+/*
 function OnGUI () {
   GUI.Box (Rect (10,100,150,50),textboxtext);
 }
-
+*/
 function Warp(){
   FoundPlace = false;
   var RandomPosition = Vector3(Random.Range(MoveTo.position.x - 20.0, MoveTo.position.x + 20.0), MoveTo.position.y, Random.Range(MoveTo.position.x - 20.0, MoveTo.position.x + 20.0));
@@ -48,9 +50,3 @@ function Warp(){
     FoundPlace = true;
   }
 }
-
-
-/*
-dist > 5 &&
-
-*/

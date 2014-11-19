@@ -4,6 +4,8 @@ private var AmountKeysFound = 0;
 private var ShowTextBox = false;
 private var KeysFound = new Hashtable();
 private var TextBoxText = "Door";
+private var invtext = "";
+
 
 function Start () {
   KeysFound.Add(AmountKeysFound,"Nokey");
@@ -20,7 +22,7 @@ function Update(){
     if(hit.transform.tag == "Key"){
       //print("Hit key");
       ShowTextBox = true;
-      TextBoxText = "Key";
+      TextBoxText = hit.collider.name;
     }
     else if(hit.transform.tag == "Door" && hit.transform.hingeJoint.limits.max == 0){
       //print("Hit key");
@@ -46,6 +48,7 @@ function Update(){
       Destroy (hit.collider.gameObject);
       AmountKeysFound++;
       KeysFound.Add(AmountKeysFound,hit.collider.name);
+      invtext+=hit.collider.name+"\n";
     }
     if(hit.transform.tag == "Door"){
       if(KeysFound.ContainsValue(hit.collider.name)){
@@ -59,5 +62,8 @@ function OnGUI () {
   GUI.Box (Rect (10,10,100,50), "Key found "+AmountKeysFound);
   if(ShowTextBox){
     GUI.Box (Rect (Screen.width/2-50,Screen.height/2-25,100,50), TextBoxText);
+  }
+  if(Input.GetButton("Inventory")){
+    GUI.Box (Rect (Screen.width/2-250,Screen.height/2-250,500,500), invtext);
   }
 }
