@@ -22,7 +22,7 @@ function Update(){
     if(hit.transform.tag == "Key"){
       //print("Hit key");
       ShowTextBox = true;
-      TextBoxText = hit.collider.name;
+      TextBoxText = "Key";
     }
     else if(hit.transform.tag == "Door" && hit.transform.hingeJoint.limits.max == 0){
       //print("Hit key");
