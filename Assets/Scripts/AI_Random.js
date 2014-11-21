@@ -16,10 +16,8 @@ private var Used = true;
 private var Called = true;
 private var Killed = false;
 private var agent: NavMeshAgent;
-private var PlayerCam : GameObject;
-private var FlashLight : Light;
-
-
+private var PlayerCam: GameObject;
+private var FlashLight: Light;
 
 function Start () {
 	agent = GetComponent.<NavMeshAgent>();
@@ -39,39 +37,43 @@ function Update () {
 	var forward = Camera.main.transform.forward;
 	var angle = Vector3.Angle(targetDir, forward);
 	var dist = Vector3.Distance(MoveTo.position, transform.position);
-		if (!Physics.Raycast (transform.position, direction, hit, dist)) {
-			agent.SetDestination(MoveTo.position);
-			CurrText = "I can see you";
-			PlaySoundIfNotPlaying(FootSteps);
-		}
-		else{
-			CurrText = "I can not see you";
-		}
-		if (Time.time > nextPath) {
-			var RandomPosition = Vector3(Random.Range(-20.0, 20.0), Random.Range(0.0, 10.0), Random.Range(-20.0, 20.0));
-			agent.SetDestination(RandomPosition);
-			//print(RandomPosition+" "+nextPath);
-			nextPath = Mathf.Infinity;
-		}
-		if (agent.remainingDistance <= stoppingDistance && !Called) {
-			nextPath = Time.time + IdleTime;
-			//print(nextPath);
-			Called = true;
-		}
-		if (agent.remainingDistance >= stoppingDistance && Called) {
-			Called = false;
-		}
-		if (Time.time > TimeUntilLevelReload) {
-			Application.LoadLevel(Application.loadedLevel);
-		}
+	if (!Physics.Raycast (transform.position, direction, hit, dist)) {
+		CurrText = "I can see you";
 		if (FlashLight.enabled && angle > 150 && dist < 10){
 			agent.Stop();
+			nextPath = Time.time + IdleTime;
 		}
+		else{
+			agent.SetDestination(MoveTo.position);
+			PlaySoundIfNotPlaying(FootSteps);
+			nextPath = Time.time + IdleTime;
+		}
+	}
+	else{
+		CurrText = "I can not see you";
+	}
+	if (Time.time > nextPath) {
+		var RandomPosition = Vector3(Random.Range(-20.0, 20.0), Random.Range(0.0, 10.0), Random.Range(-20.0, 20.0));
+		agent.SetDestination(RandomPosition);
+		//print(RandomPosition+" "+nextPath);
+		nextPath = Mathf.Infinity;
+	}
+	if (agent.remainingDistance <= stoppingDistance && !Called) {
+		nextPath = Time.time + IdleTime;
+		//print(nextPath);
+		Called = true;
+	}
+	if (agent.remainingDistance >= stoppingDistance && Called) {
+		Called = false;
+	}
+	if (Time.time > TimeUntilLevelReload) {
+		Application.LoadLevel(Application.loadedLevel);
+	}
 	Debug.DrawLine (agent.destination, transform.position);
 }
 
-function OnTriggerEnter (PlayerCam : Collider) {
-  if(PlayerCam.gameObject.tag == "Player" && !GodMode){
+function OnTriggerEnter (Player : Collider) {
+  if(Player.gameObject.tag == "Player" && !GodMode){
 		TimeUntilLevelReload = Time.time + 2;
 		Killed = true;
 	}
@@ -84,6 +86,7 @@ function OnGUI () {
 			PlaySoundIfNotPlaying(SoundDead);
 		}
 }
+
 function PlaySoundIfNotPlaying(CurrentSound :AudioClip){
  	if (!audio.isPlaying){
 		audio.clip = CurrentSound;

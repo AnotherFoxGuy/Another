@@ -4,28 +4,23 @@ private var AmountKeysFound = 0;
 private var ShowTextBox = false;
 private var KeysFound = new Hashtable();
 private var TextBoxText = "Door";
-private var invtext = "";
-
+private var invtext = String.Empty;
 
 function Start () {
   KeysFound.Add(AmountKeysFound,"Nokey");
 }
 
-
 function Update(){
   var ray = Camera.main.transform.position;
   var hit : RaycastHit;
   var tmpPos = Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
-  //var otherObj :
   if (Physics.Raycast (tmpPos,transform.TransformDirection(Vector3.forward), hit, 5)){
   Debug.DrawLine (tmpPos, hit.point);
     if(hit.transform.tag == "Key"){
-      //print("Hit key");
       ShowTextBox = true;
       TextBoxText = hit.collider.name;
     }
     else if(hit.transform.tag == "Door" && hit.transform.hingeJoint.limits.max == 0){
-      //print("Hit key");
       ShowTextBox = true;
       if(KeysFound.ContainsValue(hit.collider.name)){
         TextBoxText = "Open Door";
@@ -64,6 +59,6 @@ function OnGUI () {
     GUI.Box (Rect (Screen.width/2-50,Screen.height/2-25,100,50), TextBoxText);
   }
   if(Input.GetButton("Inventory")){
-    GUI.Box (Rect (Screen.width/2-250,Screen.height/2-250,500,500), invtext);
+    GUI.Box (Rect (50,50,Screen.width/4,Screen.height-100), invtext);
   }
 }
