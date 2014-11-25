@@ -1,6 +1,7 @@
 #pragma strict
 
 @script RequireComponent (NavMeshAgent)
+@script AddComponentMenu ("AI/AI Patrol")
 
 public var MoveTo : Transform;
 public var targetPoints : Transform[];
@@ -14,6 +15,7 @@ private var nextPath = 0.0;
 private var TimeUntilLevelReload = Mathf.Infinity;
 private var stoppingDistance = 1.5;
 private var CurrText = "";
+private var CanSee = false;
 private var Used = true;
 private var Called = true;
 private var Killed = false;
@@ -40,6 +42,7 @@ function Update () {
   var dist = Vector3.Distance(MoveTo.position, transform.position);
   if (!Physics.Raycast (transform.position, direction, hit, dist)) {
     CurrText = "I can see you";
+    CanSee = true;
     if (FlashLight.enabled || dist < 6){
       agent.SetDestination(MoveTo.position);
       PlaySoundIfNotPlaying(FootSteps);
@@ -47,6 +50,7 @@ function Update () {
   }
   else{
     CurrText = "I can not see you";
+    CanSee = false;
   }
   if (Time.time > nextPath) {
     nextpoint++;
@@ -71,8 +75,8 @@ function Update () {
   Debug.DrawLine (agent.destination, transform.position);
 }
 
-function OnTriggerEnter (Player : Collider) {
-  if(Player.gameObject.tag == "Player" && !GodMode){
+function OnTriggerStay (Player : Collider) {
+  if(Player.gameObject.tag == "Player" && !GodMode && !Killed && CanSee){
     TimeUntilLevelReload = Time.time + 2;
     Killed = true;
   }
@@ -81,7 +85,7 @@ function OnTriggerEnter (Player : Collider) {
 function OnGUI () {
   //GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
     if(Killed){
-      GUI.Box (Rect (Screen.width/2-100,Screen.height/2-30, 200, 60), "you are kill");
+      GUI.Box (Rect (Screen.width/2-100,Screen.height/2-30, 200, 60), "you are killed");
       PlaySoundIfNotPlaying(SoundDead);
     }
 }
