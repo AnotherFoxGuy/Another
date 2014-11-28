@@ -1,5 +1,7 @@
 ﻿#pragma strict
 
+@script AddComponentMenu ("AI/AI Slender")
+
 public var MoveTo : Transform;
 private var textboxtext = "";
 private var FoundPlace = false;
@@ -8,7 +10,6 @@ function Start () {
 }
 
 function Update () {
-  //transform.LookAt(MoveTo);
   var hit : RaycastHit;
   var heading = MoveTo.position - transform.position;
   var distance = heading.magnitude;
@@ -38,7 +39,7 @@ function Warp(){
   var forward = Camera.main.transform.forward;
   var angle = Vector3.Angle(targetDir, forward);
   //textboxtext = dist+" @ "+angle;
-  if(dist < 5 || angle > 120 || !renderer.enabled){
+  if(dist < 5 || angle > 120 ){
     transform.position = RandomPosition;
   }
   else{

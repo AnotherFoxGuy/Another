@@ -22,11 +22,18 @@ private var Killed = false;
 private var agent: NavMeshAgent;
 private var PlayerCam: GameObject;
 private var FlashLight: Light;
+private var Player: GameObject;
+private var Playercontroller : CharacterController ;
+private var PreviousseeChance = 0 ;
+private var HaveSee = false ;
+
 
 function Start () {
   agent = GetComponent.<NavMeshAgent>();
   PlayerCam = GameObject.Find("Main Camera");
   FlashLight = PlayerCam.GetComponent(Light);
+  Player = GameObject.Find( "First Person Controller");
+  Playercontroller = Player.GetComponent(CharacterController);
   agent.stoppingDistance = stoppingDistance;
   agent.SetDestination(targetPoints[0].transform.position);
 }
@@ -40,18 +47,33 @@ function Update () {
   var forward = Camera.main.transform.forward;
   var angle = Vector3.Angle(targetDir, forward);
   var dist = Vector3.Distance(MoveTo.position, transform.position);
-  if (!Physics.Raycast (transform.position, direction, hit, dist)) {
-    CurrText = "I can see you";
+  var playerspeed = Mathf.Abs(Playercontroller.velocity.x)+ Mathf.Abs(Playercontroller.velocity.z);
+  var agentspeed = Mathf.Abs(agent.velocity.x)+ Mathf.Abs(agent.velocity.z);
+  var seeChance = 0;
+  //seeChance+= dist;
+  //seeChance+= Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z)*2;
+  if (playerspeed > 10)
+    seeChance+=30;
+  else if (playerspeed > 5)
+    //seeChance+=10;
+  if (!Physics.Raycast (transform.position, direction, hit, dist)){
+    if(Playercontroller.height <1)
+      seeChance+=10;
+    else
+      seeChance+=90;
+    if(FlashLight.enabled)
+      seeChance+=20;
+  }
+  if (CanSeeChance(seeChance)) {
+    agent.SetDestination(MoveTo.position);
+    CurrText = "YES \n";
     CanSee = true;
-    if (FlashLight.enabled || dist < 6){
-      agent.SetDestination(MoveTo.position);
-      PlaySoundIfNotPlaying(FootSteps);
-    }
   }
   else{
-    CurrText = "I can not see you";
+    CurrText = "NO \n";
     CanSee = false;
   }
+  CurrText+=seeChance;
   if (Time.time > nextPath) {
     nextpoint++;
     if (nextpoint == targetPoints.length){
@@ -72,6 +94,9 @@ function Update () {
   if (Time.time > TimeUntilLevelReload) {
     Application.LoadLevel(Application.loadedLevel);
   }
+  if(agentspeed  > 1){
+    PlaySoundIfNotPlaying(FootSteps);
+  }
   Debug.DrawLine (agent.destination, transform.position);
 }
 
@@ -83,7 +108,7 @@ function OnTriggerStay (Player : Collider) {
 }
 
 function OnGUI () {
-  //GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
+  GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
     if(Killed){
       GUI.Box (Rect (Screen.width/2-100,Screen.height/2-30, 200, 60), "you are killed");
       PlaySoundIfNotPlaying(SoundDead);
@@ -95,5 +120,23 @@ function PlaySoundIfNotPlaying(CurrentSound :AudioClip){
     audio.clip = CurrentSound;
     audio.Play();
     //print("Play Sound");
+  }
+}
+
+function CanSeeChance(Chance : float){
+  if(PreviousseeChance != Chance){
+    PreviousseeChance = Chance;
+    var RandomNumber = Random.Range(0,100);
+    if (RandomNumber <= Chance){
+      HaveSee = true;
+      return true;
+    }
+    else{
+      HaveSee = false;
+      return false;
+    }
+  }
+  else{
+    return HaveSee;
   }
 }

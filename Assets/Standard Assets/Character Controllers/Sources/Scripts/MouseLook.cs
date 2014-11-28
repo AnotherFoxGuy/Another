@@ -28,10 +28,68 @@ public class MouseLook : MonoBehaviour {
 	public float minimumY = -60F;
 	public float maximumY = 60F;
 
+	private GameObject  CurrObj;
+	private CharacterController controller;
+	private bool CanStandUp = false;
+	private bool NeedStandUp = false;
+
 	float rotationY = 0F;
 
+	void sneak(bool sneakmode, bool forced){
+		Vector3 fwd = transform.TransformDirection(Vector3.up);
+		if (Physics.Raycast(transform.position, fwd, 2))
+			CanStandUp = false;
+		else{
+			CanStandUp = true;
+		}
+		if (CurrObj.transform.tag == "Player"){
+			if(sneakmode){
+				controller.height = 0.2f;
+			}
+			else{
+				if(CanStandUp){
+					controller.height = 2.0f;
+					Vector3 tmpPos = new Vector3(this.transform.localPosition.x,this.transform.localPosition.y+1, this.transform.localPosition.z);
+					transform.localPosition = tmpPos;
+				}
+				else{
+					NeedStandUp = true;
+				}
+			}
+			if(forced){
+				controller.height = 2.0f;
+				Vector3 tmpPos = new Vector3(this.transform.localPosition.x,this.transform.localPosition.y+1, this.transform.localPosition.z);
+				transform.localPosition = tmpPos;
+				NeedStandUp =false;
+			}
+		}
+		if (CurrObj.transform.tag == "MainCamera"){
+			if(sneakmode){
+				Vector3 tmpPos = new Vector3(this.transform.localPosition.x,0f, this.transform.localPosition.z);
+				transform.localPosition = tmpPos;
+			}
+			else{
+				if(CanStandUp){
+					Vector3 tmpPos = new Vector3(this.transform.localPosition.x,1f, this.transform.localPosition.z);
+					transform.localPosition = tmpPos;
+
+				}
+				else{
+					NeedStandUp = true;
+				}
+			}
+			if(forced){
+				Vector3 tmpPos = new Vector3(this.transform.localPosition.x,1f, this.transform.localPosition.z);
+				transform.localPosition = tmpPos;
+				NeedStandUp =false;
+			}
+		}
+	}
 	void Update ()
 	{
+		Vector3 fwd = transform.TransformDirection(Vector3.up);
+		if (!Physics.Raycast(transform.position, fwd, 3) && NeedStandUp)
+			sneak(false,true);
 		if (axes == RotationAxes.MouseXAndY)
 		{
 			float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;
@@ -52,12 +110,21 @@ public class MouseLook : MonoBehaviour {
 
 			transform.localEulerAngles = new Vector3(-rotationY, transform.localEulerAngles.y, 0);
 		}
+		if(Input.GetButtonDown("Sneak")){
+			sneak(true,false);
+		}
+		if(Input.GetButtonUp("Sneak") && CanStandUp){
+			sneak(false,false);
+		}
 	}
 
-	void Start ()
+
+void Start ()
 	{
-		// Make the rigid body not change rotation
+		CurrObj = GameObject.Find(this.name);
+		if (CurrObj.transform.tag == "Player")
+			controller = GetComponent<CharacterController>();
 		if (GetComponent<Rigidbody>())
-		GetComponent<Rigidbody>().freezeRotation = true;
+			GetComponent<Rigidbody>().freezeRotation = true;
 	}
 }

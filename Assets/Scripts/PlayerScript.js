@@ -1,5 +1,7 @@
 #pragma strict
 
+public var StartWithFlashlight = false;
+
 private var AmountInventory = 0;
 private var Batterys = 0;
 private var BatteryPower = 100f;
@@ -15,6 +17,8 @@ private var InventoryArr = new Array ();
 function Start () {
   FlashLight = GetComponent(Light);
   Inventory.Add("Nokey",InventoryArr.length);
+  if (StartWithFlashlight)
+    CanUseFlashLight = true;
 }
 
 function Update(){
@@ -52,7 +56,7 @@ function Update(){
   else{
     ShowTextBox = false;
   }
-  if(Input.GetButtonDown("FlashLight") && CanUseFlashLight){
+  if(Input.GetButtonDown("FlashLight") && CanUseFlashLight && StartWithFlashlight){
     FlashLight.enabled = !FlashLight.enabled;
   }
   if(Input.GetButtonDown("Recharge") && Batterys > 0){
@@ -62,6 +66,7 @@ function Update(){
     InventoryArr.RemoveAt(tmp);
     Inventory.Remove("Battery"+Batterys);
     Batterys--;
+    IndexInventory();
   }
   if(FlashLight.enabled){
     var tmpdt =  Time.deltaTime*1;
@@ -76,18 +81,22 @@ function Update(){
       Destroy (hit.collider.gameObject);
       InventoryArr.Push(hit.collider.name);
       Inventory.Add(hit.collider.name,InventoryArr.length);
+      IndexInventory();
     }
     else if(hit.transform.tag == "FlashLight"){
       Destroy (hit.collider.gameObject);
+      StartWithFlashlight =true;
       CanUseFlashLight = true;
       InventoryArr.Push(hit.collider.name);
       Inventory.Add(hit.collider.name,InventoryArr.length);
+      IndexInventory();
     }
     else if(hit.transform.tag == "Battery"){
       Destroy (hit.collider.gameObject);
       InventoryArr.Push(hit.collider.name);
       Batterys++;
       Inventory.Add("Battery"+Batterys,InventoryArr.length);
+      IndexInventory();
     }
     else if(hit.transform.tag == "Door"){
       if(Inventory.ContainsKey(hit.collider.name)){
@@ -113,12 +122,15 @@ function OnGUI () {
     GUI.Box (Rect (10,10,200,50), "BatteryPower @ "+Mathf.Floor(BatteryPower)+"%");
   }
   if (Input.GetButtonDown("Inventory")){
-    invtext = String.Empty;
-    for (var value : String in InventoryArr) {
-      invtext+=value+"\n";
-    }
+    IndexInventory();
   }
   if(Input.GetButton("Inventory")){
     GUI.Box (Rect (50,50,Screen.width/4,Screen.height-100), invtext);
+  }
+}
+function IndexInventory(){
+  invtext = String.Empty;
+  for (var value : String in InventoryArr) {
+    invtext+=value+"\n";
   }
 }
