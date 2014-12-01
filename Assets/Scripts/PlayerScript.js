@@ -4,7 +4,7 @@ public var StartWithFlashlight = false;
 
 private var AmountInventory = 0;
 private var Batterys = 0;
-private var BatteryPower = 100f;
+private var BatteryPower = 0f;
 private var ShowTextBox = false;
 private var TextBoxText = "Sample Text";
 private var invtext = "";
@@ -59,7 +59,7 @@ function Update(){
   if(Input.GetButtonDown("FlashLight") && CanUseFlashLight && StartWithFlashlight){
     FlashLight.enabled = !FlashLight.enabled;
   }
-  if(Input.GetButtonDown("Recharge") && Batterys > 0){
+  if(Input.GetButtonDown("Recharge") && Batterys > 0 && BatteryPower < 99){
     BatteryPower = 100;
     CanUseFlashLight = true;
     var tmp = 0; tmp = Inventory["Battery"+Batterys]; tmp--;
@@ -86,7 +86,6 @@ function Update(){
     else if(hit.transform.tag == "FlashLight"){
       Destroy (hit.collider.gameObject);
       StartWithFlashlight =true;
-      CanUseFlashLight = true;
       InventoryArr.Push(hit.collider.name);
       Inventory.Add(hit.collider.name,InventoryArr.length);
       IndexInventory();
@@ -128,6 +127,7 @@ function OnGUI () {
     GUI.Box (Rect (50,50,Screen.width/4,Screen.height-100), invtext);
   }
 }
+
 function IndexInventory(){
   invtext = String.Empty;
   for (var value : String in InventoryArr) {

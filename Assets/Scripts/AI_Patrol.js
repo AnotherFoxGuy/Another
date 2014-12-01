@@ -79,6 +79,10 @@ function Update () {
     if (nextpoint == targetPoints.length){
       nextpoint = 0;
     }
+    if(dist < 2 && !GodMode && !Killed && CanSee){
+      TimeUntilLevelReload = Time.time + 2;
+      Killed = true;
+    }
     agent.SetDestination(targetPoints[nextpoint].transform.position);
     //print(nextpoint);
     nextPath = Mathf.Infinity;
@@ -99,14 +103,14 @@ function Update () {
   }
   Debug.DrawLine (agent.destination, transform.position);
 }
-
+/*
 function OnTriggerStay (Player : Collider) {
   if(Player.gameObject.tag == "Player" && !GodMode && !Killed && CanSee){
     TimeUntilLevelReload = Time.time + 2;
     Killed = true;
   }
 }
-
+*/
 function OnGUI () {
   GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
     if(Killed){
