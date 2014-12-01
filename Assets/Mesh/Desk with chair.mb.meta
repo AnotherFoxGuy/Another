@@ -1,43 +1,50 @@
 fileFormatVersion: 2
-guid: a7be8dbd4e6b81a4abb1a71c210d914d
+guid: b0f2915a0ee38dd43a34d120e6846eda
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
-    100002: pCylinder1
-    100004: pCylinder2
-    100006: pCylinder3
-    100008: pSphere1
-    100010: LampCeiling
-    100012: transform1
-    100014: transform2
-    100016: transform3
-    100018: transform4
+    100002: pCube1
+    100004: pCube2
+    100006: pCube3
+    100008: pCube4
+    100010: pCube5
+    100012: pCube6
+    100014: pCube7
+    100016: transform1
+    100018: transform2
+    100020: transform3
+    100022: transform4
+    100024: transform5
+    100026: Chair
+    100028: Desk
     400000: //RootNode
-    400002: pCylinder1
-    400004: pCylinder2
-    400006: pCylinder3
-    400008: pSphere1
-    400010: LampCeiling
-    400012: transform1
-    400014: transform2
-    400016: transform3
-    400018: transform4
-    2300000: pCylinder1
-    2300002: pCylinder2
-    2300004: pCylinder3
-    2300006: pSphere1
-    2300008: LampCeiling
-    3300000: pCylinder1
-    3300002: pCylinder2
-    3300004: pCylinder3
-    3300006: pSphere1
-    3300008: LampCeiling
-    4300000: pCylinder1
-    4300002: pCylinder2
-    4300004: pSphere1
-    4300006: pCylinder3
-    4300008: LampCeiling
+    400002: pCube1
+    400004: pCube2
+    400006: pCube3
+    400008: pCube4
+    400010: pCube5
+    400012: pCube6
+    400014: pCube7
+    400016: transform1
+    400018: transform2
+    400020: transform3
+    400022: transform4
+    400024: transform5
+    400026: Chair
+    400028: Desk
+    2300000: pCube1
+    2300002: pCube7
+    2300004: Chair
+    2300006: Desk
+    3300000: pCube1
+    3300002: pCube7
+    3300004: Chair
+    3300006: Desk
+    4300000: pCube1
+    4300002: pCube7
+    4300004: Desk
+    4300006: Chair
     9500000: //RootNode
   materials:
     importMaterials: 1

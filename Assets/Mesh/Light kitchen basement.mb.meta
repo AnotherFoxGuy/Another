@@ -1,43 +1,36 @@
 fileFormatVersion: 2
-guid: a7be8dbd4e6b81a4abb1a71c210d914d
+guid: 65974318a43c67c409aaf69cd0f48ff0
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
-    100002: pCylinder1
-    100004: pCylinder2
-    100006: pCylinder3
-    100008: pSphere1
-    100010: LampCeiling
+    100002: pCube1
+    100004: pCube2
+    100006: pCube3
+    100008: pCylinder1
+    100010: pCylinder2
     100012: transform1
     100014: transform2
     100016: transform3
     100018: transform4
+    100020: LampCeiling2
     400000: //RootNode
-    400002: pCylinder1
-    400004: pCylinder2
-    400006: pCylinder3
-    400008: pSphere1
-    400010: LampCeiling
+    400002: pCube1
+    400004: pCube2
+    400006: pCube3
+    400008: pCylinder1
+    400010: pCylinder2
     400012: transform1
     400014: transform2
     400016: transform3
     400018: transform4
-    2300000: pCylinder1
-    2300002: pCylinder2
-    2300004: pCylinder3
-    2300006: pSphere1
-    2300008: LampCeiling
-    3300000: pCylinder1
-    3300002: pCylinder2
-    3300004: pCylinder3
-    3300006: pSphere1
-    3300008: LampCeiling
-    4300000: pCylinder1
-    4300002: pCylinder2
-    4300004: pSphere1
-    4300006: pCylinder3
-    4300008: LampCeiling
+    400020: LampCeiling2
+    2300000: pCube3
+    2300002: LampCeiling2
+    3300000: pCube3
+    3300002: LampCeiling2
+    4300000: pCube3
+    4300002: LampCeiling2
     9500000: //RootNode
   materials:
     importMaterials: 1
