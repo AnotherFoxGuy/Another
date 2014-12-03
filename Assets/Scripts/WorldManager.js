@@ -10,6 +10,9 @@ RenderSettings.ambientLight = Color.black;
 
 */
 
+@script RequireComponent (Projector)
+@script AddComponentMenu ("WorldManager/WorldManager Projector")
+
 public var FireMat: Material;
 public var TestMat: Material;
 

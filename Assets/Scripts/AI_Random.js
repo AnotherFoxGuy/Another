@@ -61,8 +61,8 @@ function Update () {
 	var playerspeed = Mathf.Abs(Playercontroller.velocity.x)+ Mathf.Abs(Playercontroller.velocity.z);
 	var agentspeed = Mathf.Abs(agent.velocity.x)+ Mathf.Abs(agent.velocity.z);
 	var SeeChance = 0;
-	var SCC = dist/25;
-	SeeChance+= Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z)/SCC;
+	var SCvar = dist/25;
+	SeeChance+= Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z)/SCvar;
 	if (!Physics.Raycast (transform.position, direction, hit, dist)){
 		if(Playercontroller.height < 1)
 			SeeChance+=10;

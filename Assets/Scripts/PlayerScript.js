@@ -1,6 +1,7 @@
 #pragma strict
 
 public var StartWithFlashlight = false;
+public var StartWithBattery = false;
 
 private var AmountInventory = 0;
 private var Batterys = 0;
@@ -19,6 +20,8 @@ function Start () {
   Inventory.Add("Nokey",InventoryArr.length);
   if (StartWithFlashlight)
     CanUseFlashLight = true;
+  if(StartWithBattery)
+    BatteryPower = 100f;
 }
 
 function Update(){
