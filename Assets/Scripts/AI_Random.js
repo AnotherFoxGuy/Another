@@ -33,6 +33,9 @@ private var Player: GameObject;
 private var Playercontroller : CharacterController ;
 private var SeeTimer = 0f;
 private var HaveSee = false ;
+private var GodModeProgress = 0;
+private var CheatDelay = 0f;
+
 
 function Start () {
 	agent = GetComponent.<NavMeshAgent>();
@@ -46,6 +49,7 @@ function Start () {
 }
 
 function Update () {
+	UpdateCheats();
 	var hit: RaycastHit;
 	var heading = MoveTo.position - transform.position;
 	var distance = heading.magnitude;
@@ -151,5 +155,23 @@ function CanSeeChance(Chance : float){
 	}
 	else{
 		return HaveSee;
+	}
+}
+function UpdateCheats() {
+	if(CheatDelay > 0.0){
+		CheatDelay -= Time.deltaTime;
+		if(CheatDelay <= 0.0){
+			CheatDelay = 0.0;
+			GodModeProgress = 0;
+		}
+	}
+	if(GodModeProgress == 0 && Input.GetKeyDown('g')){
+		++GodModeProgress; CheatDelay = 1.0;
+	} else if(GodModeProgress == 1 && Input.GetKeyDown('o')){
+		++GodModeProgress; CheatDelay = 1.0;
+	} else if(GodModeProgress == 2 && Input.GetKeyDown('d')){
+		GodModeProgress = 0;
+		PlaySoundIfNotPlaying(SoundDead);
+		GodMode = !GodMode;
 	}
 }
