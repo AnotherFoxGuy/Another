@@ -71,6 +71,9 @@ function Update () {
 		if(FlashLight.enabled)
 			SeeChance+=20;
 	}
+	if(dist > 10){
+		SeeChance = 0;
+	}
 	if (CanSeeChance(SeeChance)) {
 		agent.SetDestination(MoveTo.position);
 		CurrText = "YES";

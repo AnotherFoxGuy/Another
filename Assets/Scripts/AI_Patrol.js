@@ -24,7 +24,7 @@ private var PlayerCam: GameObject;
 private var FlashLight: Light;
 private var Player: GameObject;
 private var Playercontroller : CharacterController ;
-private var PreviousseeChance = 0 ;
+private var PreviousSeeChance = 0 ;
 private var HaveSee = false ;
 private var GodModeProgress = 0;
 private var CheatDelay = 0f;
@@ -52,22 +52,21 @@ function Update () {
   var dist = Vector3.Distance(MoveTo.position, transform.position);
   var playerspeed = Mathf.Abs(Playercontroller.velocity.x)+ Mathf.Abs(Playercontroller.velocity.z);
   var agentspeed = Mathf.Abs(agent.velocity.x)+ Mathf.Abs(agent.velocity.z);
-  var seeChance = 0;
-  //seeChance+= dist;
-  //seeChance+= Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z)*2;
-  if (playerspeed > 10)
-    seeChance+=30;
-  else if (playerspeed > 5)
-    //seeChance+=10;
+  var SeeChance = 0;
+  var SCvar = dist/25;
+  SeeChance+= Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z)/SCvar;
   if (!Physics.Raycast (transform.position, direction, hit, dist)){
     if(Playercontroller.height <1)
-      seeChance+=10;
+      SeeChance+=10;
     else
-      seeChance+=90;
+      SeeChance+=90;
     if(FlashLight.enabled)
-      seeChance+=20;
+      SeeChance+=20;
   }
-  if (CanSeeChance(seeChance)) {
+  if(dist > 10){
+    SeeChance = 0;
+  }
+  if (CanSeeChance(SeeChance)) {
     agent.SetDestination(MoveTo.position);
     CurrText = "YES \n";
     CanSee = true;
@@ -76,7 +75,7 @@ function Update () {
     CurrText = "NO \n";
     CanSee = false;
   }
-  CurrText+=seeChance;
+  CurrText+=SeeChance;
   if (Time.time > nextPath) {
     nextpoint++;
     if (nextpoint == targetPoints.length){
@@ -131,8 +130,8 @@ function PlaySoundIfNotPlaying(CurrentSound :AudioClip){
 }
 
 function CanSeeChance(Chance : float){
-  if(PreviousseeChance != Chance){
-    PreviousseeChance = Chance;
+  if(PreviousSeeChance != Chance){
+    PreviousSeeChance = Chance;
     var RandomNumber = Random.Range(0,100);
     if (RandomNumber <= Chance){
       HaveSee = true;

@@ -8,11 +8,13 @@ private var ShowTextBox = false;
 @script RequireComponent (Collider)
 
 
-function OnTriggerEnter(){
-  ShowTextBox = true;
+function OnTriggerEnter (player : Collider) {
+  if(player.gameObject.tag == "Player")
+    ShowTextBox = true;
 }
-function OnTriggerExit(){
-  ShowTextBox = false;
+function OnTriggerExit(player : Collider){
+  if(player.gameObject.tag == "Player")
+    ShowTextBox = false;
 }
 
 function OnGUI () {
