@@ -1,36 +1,13 @@
 fileFormatVersion: 2
-guid: a2827cde8691ba9429ccbbe9f5c62162
+guid: e1dc57c3550c4bf4c9f8f74a954fd1b9
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: Fence
-    100002: Fence_001
-    100004: Fence_002
-    100006: Fence_003
-    100008: Fence_004
-    100010: //RootNode
-    400000: Fence
-    400002: Fence_001
-    400004: Fence_002
-    400006: Fence_003
-    400008: Fence_004
-    400010: //RootNode
-    2300000: Fence
-    2300002: Fence_001
-    2300004: Fence_002
-    2300006: Fence_003
-    2300008: Fence_004
-    3300000: Fence
-    3300002: Fence_001
-    3300004: Fence_002
-    3300006: Fence_003
-    3300008: Fence_004
-    4300000: Fence_004
-    4300002: Fence_003
-    4300004: Fence_002
-    4300006: Fence_001
-    4300008: Fence
-    7400000: Default Take
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Sanctuary
     9500000: //RootNode
   materials:
     importMaterials: 1
