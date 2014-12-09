@@ -1,14 +1,5 @@
 #pragma strict
 
-
-/*
-if(CanSeeChance(99))
-CurrText = "I can see you";
-else
-CurrText = "I can not see you";
-
-
-*/
 @script RequireComponent (NavMeshAgent)
 @script AddComponentMenu ("AI/AI Random")
 
@@ -37,18 +28,18 @@ private var GodModeProgress = 0;
 private var CheatDelay = 0f;
 
 
-function Start () {
-	agent = GetComponent.<NavMeshAgent>();
+function Start() {
+	agent = GetComponent. < NavMeshAgent > ();
 	PlayerCam = GameObject.Find("Main Camera");
 	FlashLight = PlayerCam.GetComponent(Light);
-	Player = GameObject.Find( "First Person Controller");
+	Player = GameObject.Find("First Person Controller");
 	Playercontroller = Player.GetComponent(CharacterController);
 	agent.stoppingDistance = stoppingDistance;
 	var RandomPosition = Vector3(Random.Range(-20.0, 20.0), Random.Range(0.0, 10.0), Random.Range(-20.0, 20.0));
 	agent.SetDestination(RandomPosition);
 }
 
-function Update () {
+function Update() {
 	UpdateCheats();
 	var hit: RaycastHit;
 	var heading = MoveTo.position - transform.position;
@@ -58,41 +49,38 @@ function Update () {
 	var forward = Camera.main.transform.forward;
 	var angle = Vector3.Angle(targetDir, forward);
 	var dist = Vector3.Distance(MoveTo.position, transform.position);
-	var playerspeed = Mathf.Abs(Playercontroller.velocity.x)+ Mathf.Abs(Playercontroller.velocity.z);
-	var agentspeed = Mathf.Abs(agent.velocity.x)+ Mathf.Abs(agent.velocity.z);
+	var playerspeed = Mathf.Abs(Playercontroller.velocity.x) + Mathf.Abs(Playercontroller.velocity.z);
+	var agentspeed = Mathf.Abs(agent.velocity.x) + Mathf.Abs(agent.velocity.z);
 	var SeeChance = 0;
-	var SCvar = dist/25;
-	SeeChance+= Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z)/SCvar;
-	if (!Physics.Raycast (transform.position, direction, hit, dist)){
-		if(Playercontroller.height < 1)
-			SeeChance+=10;
+	var SCvar = dist / 25;
+	SeeChance += Mathf.Abs(Playercontroller.velocity.x + Playercontroller.velocity.z) / SCvar;
+	if (!Physics.Raycast(transform.position, direction, hit, dist)) {
+		if (Playercontroller.height > 0.5)
+			SeeChance += 10;
 		else
-			SeeChance+=90;
-		if(FlashLight.enabled)
-			SeeChance+=20;
+			SeeChance += 90;
+		if (FlashLight.enabled)
+			SeeChance += 20;
 	}
-	if(dist > 10){
+	if (dist > 10) {
 		SeeChance = 0;
 	}
 	if (CanSeeChance(SeeChance)) {
 		agent.SetDestination(MoveTo.position);
-		CurrText = "YES";
+		CurrText = "YES \n";
 		CanSee = true;
 		agent.speed = 9;
-	}
-	else{
-		CurrText = "NO";
+	} else {
+		CurrText = "NO \n";
 		CanSee = false;
 		agent.speed = 3;
 	}
-	if (FlashLight.enabled && angle > 150 && dist < 10 ){
+	if (FlashLight.enabled && angle > 150 && dist < 10) {
 		agent.Stop();
-	}
-	else{
+	} else {
 		agent.Resume();
 	}
-	CurrText+= "\n";
-	CurrText+=SeeChance;
+	CurrText += SeeChance;
 	if (Time.time > nextPath) {
 		var RandomPosition = Vector3(Random.Range(-20.0, 20.0), Random.Range(0.0, 10.0), Random.Range(-20.0, 20.0));
 		agent.SetDestination(RandomPosition);
@@ -110,69 +98,63 @@ function Update () {
 	if (Time.time > TimeUntilLevelReload) {
 		Application.LoadLevel(Application.loadedLevel);
 	}
-	if(dist < 2 && !GodMode && !Killed && CanSee){
+	if (dist < 2 && !GodMode && !Killed && CanSee) {
 		TimeUntilLevelReload = Time.time + 2;
 		Killed = true;
 	}
-	if(agentspeed  > 1){
+	if (agentspeed > 1) {
 		PlaySoundIfNotPlaying(FootSteps);
 	}
-	Debug.DrawLine (agent.destination, transform.position);
-}
-/*
-function OnTriggerStay (Player : Collider) {
-	if(Player.gameObject.tag == "Player" && !GodMode && !Killed && CanSee){
-		TimeUntilLevelReload = Time.time + 2;
-		Killed = true;
-	}
-}
-*/
-function OnGUI () {
-  GUI.Box (Rect (Screen.width-200, 25, 200, 60), CurrText);
-		if(Killed){
-			GUI.Box (Rect (Screen.width/2-100,Screen.height/2-30, 200, 60), "you are dead!");
-			PlaySoundIfNotPlaying(SoundDead);
-		}
+	Debug.DrawLine(agent.destination, transform.position);
 }
 
-function PlaySoundIfNotPlaying(CurrentSound :AudioClip){
- 	if (!audio.isPlaying){
+function OnGUI() {
+	GUI.Box(Rect(Screen.width - 200, 25, 200, 60), CurrText);
+	if (Killed) {
+		GUI.Box(Rect(Screen.width / 2 - 100, Screen.height / 2 - 30, 200, 60), "you are dead!");
+		PlaySoundIfNotPlaying(SoundDead);
+	}
+}
+
+function PlaySoundIfNotPlaying(CurrentSound: AudioClip) {
+	if (!audio.isPlaying) {
 		audio.clip = CurrentSound;
 		audio.Play();
 		//print("Play Sound");
 	}
 }
 
-function CanSeeChance(Chance : float){
-	if(Time.time > SeeTimer ){
-		SeeTimer = Time.time+1;
-		var RandomNumber = Random.Range(0,100);
-			if (RandomNumber <= Chance){
-				HaveSee = true;
-				return true;
-			}
-			else{
-				HaveSee = false;
-				return false;
-			}
-	}
-	else{
+function CanSeeChance(Chance: float) {
+	if (Time.time > SeeTimer) {
+		SeeTimer = Time.time + 1;
+		var RandomNumber = Random.Range(0, 100);
+		if (RandomNumber <= Chance) {
+			HaveSee = true;
+			return true;
+		} else {
+			HaveSee = false;
+			return false;
+		}
+	} else {
 		return HaveSee;
 	}
 }
+
 function UpdateCheats() {
-	if(CheatDelay > 0.0){
+	if (CheatDelay > 0.0) {
 		CheatDelay -= Time.deltaTime;
-		if(CheatDelay <= 0.0){
+		if (CheatDelay <= 0.0) {
 			CheatDelay = 0.0;
 			GodModeProgress = 0;
 		}
 	}
-	if(GodModeProgress == 0 && Input.GetKeyDown('g')){
-		++GodModeProgress; CheatDelay = 1.0;
-	} else if(GodModeProgress == 1 && Input.GetKeyDown('o')){
-		++GodModeProgress; CheatDelay = 1.0;
-	} else if(GodModeProgress == 2 && Input.GetKeyDown('d')){
+	if (GodModeProgress == 0 && Input.GetKeyDown('g')) {
+		++GodModeProgress;
+		CheatDelay = 1.0;
+	} else if (GodModeProgress == 1 && Input.GetKeyDown('o')) {
+		++GodModeProgress;
+		CheatDelay = 1.0;
+	} else if (GodModeProgress == 2 && Input.GetKeyDown('d')) {
 		GodModeProgress = 0;
 		PlaySoundIfNotPlaying(SoundDead);
 		GodMode = !GodMode;

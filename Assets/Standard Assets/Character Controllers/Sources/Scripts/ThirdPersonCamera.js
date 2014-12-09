@@ -39,14 +39,14 @@ function Awake ()
 		Debug.Log("Please assign a camera to the ThirdPersonCamera script.");
 		enabled = false;	
 	}
-			
-		
+
+
 	_target = transform;
 	if (_target)
 	{
 		controller = _target.GetComponent(ThirdPersonController);
 	}
-	
+
 	if (controller)
 	{
 		var characterController : CharacterController = _target.GetComponent.<Collider>();
@@ -57,7 +57,7 @@ function Awake ()
 	else
 		Debug.Log("Please assign a target to the camera that has a ThirdPersonController script attached.");
 
-	
+
 	Cut(_target, centerOffset);
 }
 
@@ -71,7 +71,7 @@ function AngleDistance (a : float, b : float)
 {
 	a = Mathf.Repeat(a, 360);
 	b = Mathf.Repeat(b, 360);
-	
+
 	return Mathf.Abs(b - a);
 }
 
@@ -80,11 +80,11 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 	// Early out if we don't have a target
 	if (!controller)
 		return;
-	
+
 	var targetCenter = _target.position + centerOffset;
 	var targetHead = _target.position + headOffset;
 
-//	DebugDrawStuff();
+	//	DebugDrawStuff();
 
 	// Calculate the current & target rotation angles
 	var originalTargetAngle = _target.eulerAngles.y;
@@ -92,18 +92,18 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 
 	// Adjust real target angle when camera is locked
 	var targetAngle = originalTargetAngle; 
-	
+
 	// When pressing Fire2 (alt) the camera will snap to the target direction real quick.
 	// It will stop snapping when it reaches the target
 	if (Input.GetButton("Fire2"))
 		snap = true;
-	
+
 	if (snap)
 	{
 		// We are close to the target, so we can stop snapping now!
 		if (AngleDistance (currentAngle, originalTargetAngle) < 3.0)
 			snap = false;
-		
+
 		currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, angleVelocity, snapSmoothLag, snapMaxSpeed);
 	}
 	// Normal camera motion
@@ -143,7 +143,7 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 
 	// Convert the angle into a rotation, by which we then reposition the camera
 	var currentRotation = Quaternion.Euler (0, currentAngle, 0);
-	
+
 	// Set the position of the camera on the x-z plane to:
 	// distance meters behind the target
 	cameraTransform.position = targetCenter;
@@ -151,7 +151,7 @@ function Apply (dummyTarget : Transform, dummyCenter : Vector3)
 
 	// Set the height of the camera
 	cameraTransform.position.y = currentHeight;
-	
+
 	// Always look at the target	
 	SetUpRotation(targetCenter, targetHead);
 }
@@ -165,14 +165,14 @@ function Cut (dummyTarget : Transform, dummyCenter : Vector3)
 	var oldHeightSmooth = heightSmoothLag;
 	var oldSnapMaxSpeed = snapMaxSpeed;
 	var oldSnapSmooth = snapSmoothLag;
-	
+
 	snapMaxSpeed = 10000;
 	snapSmoothLag = 0.001;
 	heightSmoothLag = 0.001;
-	
+
 	snap = true;
 	Apply (transform, Vector3.zero);
-	
+
 	heightSmoothLag = oldHeightSmooth;
 	snapMaxSpeed = oldSnapMaxSpeed;
 	snapSmoothLag = oldSnapSmooth;
@@ -194,7 +194,7 @@ function SetUpRotation (centerPos : Vector3, headPos : Vector3)
 	// 4. When landing we smoothly interpolate towards centering him on screen
 	var cameraPos = cameraTransform.position;
 	var offsetToCenter = centerPos - cameraPos;
-	
+
 	// Generate base rotation only around y-axis
 	var yRotation = Quaternion.LookRotation(Vector3(offsetToCenter.x, 0, offsetToCenter.z));
 
@@ -207,9 +207,9 @@ function SetUpRotation (centerPos : Vector3, headPos : Vector3)
 
 	var centerRayPos = centerRay.GetPoint(distance);
 	var topRayPos = topRay.GetPoint(distance);
-	
+
 	var centerToTopAngle = Vector3.Angle(centerRay.direction, topRay.direction);
-	
+
 	var heightToAngle = centerToTopAngle / (centerRayPos.y - topRayPos.y);
 
 	var extraLookAngle = heightToAngle * (centerRayPos.y - centerPos.y);

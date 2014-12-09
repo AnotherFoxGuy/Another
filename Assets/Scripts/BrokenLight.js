@@ -10,17 +10,17 @@ private var BrokenLight : Light;
 private var LightTimer = 1f;
 
 function Start (){
-  BrokenLight = GetComponent(Light);
+	BrokenLight = GetComponent(Light);
 }
 
 function Update (){
-  if(Time.time >= LightTimer){
-    if(BrokenLight.enabled){
-      LightTimer = Time.time + Random.Range(0, TimeDelayOn);
-    }
-    else{
-      LightTimer = Time.time + Random.Range(0, TimeDelayOff);
-    }
-    BrokenLight.enabled = !BrokenLight.enabled;
-  }
+	if(Time.time >= LightTimer){
+		if(BrokenLight.enabled){
+			LightTimer = Time.time + Random.Range(0, TimeDelayOn);
+		}
+		else{
+			LightTimer = Time.time + Random.Range(0, TimeDelayOff);
+		}
+		BrokenLight.enabled = !BrokenLight.enabled;
+	}
 }

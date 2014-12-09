@@ -2,6 +2,14 @@
 #pragma implicit
 #pragma downcast
 
+private var Player: GameObject;
+private var Playercontroller : CharacterController ;
+
+function Start() {
+	Player = GameObject.Find("First Person Controller");
+	Playercontroller = Player.GetComponent(CharacterController);
+}
+
 // Does this script currently respond to input?
 var canControl : boolean = true;
 
@@ -21,51 +29,52 @@ var inputJump : boolean = false;
 
 class CharacterMotorMovement {
 	// The maximum horizontal speed when moving
-	var maxForwardSpeed : float = 10.0;
-	var maxForwardSprintSpeed : float = 15.0;
-	var maxSidewaysSpeed : float = 10.0;
-	var maxBackwardsSpeed : float = 10.0;
+var maxForwardSpeed : float = 10.0;
+var maxForwardSprintSpeed : float = 15.0;
+var maxForwardSneakSpeed : float = 1.0;
+var maxSidewaysSpeed : float = 10.0;
+var maxBackwardsSpeed : float = 10.0;
 
-	// Curve for multiplying speed based on slope (negative = downwards)
-	var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
+// Curve for multiplying speed based on slope (negative = downwards)
+var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
 
-	// How fast does the character change speeds?  Higher is faster.
-	var maxGroundAcceleration : float = 30.0;
-	var maxAirAcceleration : float = 20.0;
+// How fast does the character change speeds?  Higher is faster.
+var maxGroundAcceleration : float = 30.0;
+var maxAirAcceleration : float = 20.0;
 
-	// The gravity for the character
-	var gravity : float = 10.0;
-	var maxFallSpeed : float = 20.0;
+// The gravity for the character
+var gravity : float = 10.0;
+var maxFallSpeed : float = 20.0;
 
-	// For the next variables, @System.NonSerialized tells Unity to not serialize the variable or show it in the inspector view.
-	// Very handy for organization!
+// For the next variables, @System.NonSerialized tells Unity to not serialize the variable or show it in the inspector view.
+// Very handy for organization!
 
-	// The last collision flags returned from controller.Move
-	@System.NonSerialized
-	var collisionFlags : CollisionFlags;
+// The last collision flags returned from controller.Move
+@System.NonSerialized
+var collisionFlags : CollisionFlags;
 
-	// We will keep track of the character's current velocity,
-	@System.NonSerialized
-	var velocity : Vector3;
+// We will keep track of the character's current velocity,
+@System.NonSerialized
+var velocity : Vector3;
 
-	// This keeps track of our current velocity while we're not grounded
-	@System.NonSerialized
-	var frameVelocity : Vector3 = Vector3.zero;
+// This keeps track of our current velocity while we're not grounded
+@System.NonSerialized
+var frameVelocity : Vector3 = Vector3.zero;
 
-	@System.NonSerialized
-	var hitPoint : Vector3 = Vector3.zero;
+@System.NonSerialized
+var hitPoint : Vector3 = Vector3.zero;
 
-	@System.NonSerialized
-	var lastHitPoint : Vector3 = Vector3(Mathf.Infinity, 0, 0);
+@System.NonSerialized
+var lastHitPoint : Vector3 = Vector3(Mathf.Infinity, 0, 0);
 }
 
 var movement : CharacterMotorMovement = CharacterMotorMovement();
 
 enum MovementTransferOnJump {
 	None, // The jump is not affected by velocity of floor at all.
-	InitTransfer, // Jump gets its initial velocity from the floor, then gradualy comes to a stop.
-	PermaTransfer, // Jump gets its initial velocity from the floor, and keeps that velocity until landing.
-	PermaLocked // Jump is relative to the movement of the last touched floor and will move together with that floor.
+		InitTransfer, // Jump gets its initial velocity from the floor, then gradualy comes to a stop.
+		PermaTransfer, // Jump gets its initial velocity from the floor, and keeps that velocity until landing.
+		PermaLocked // Jump is relative to the movement of the last touched floor and will move together with that floor.
 }
 
 // We will contain all the jumping related variables in one helper class for clarity.
@@ -73,40 +82,40 @@ class CharacterMotorJumping {
 	// Can the character jump?
 	var enabled : boolean = true;
 
-	// How high do we jump when pressing jump and letting go immediately
-	var baseHeight : float = 1.0;
+// How high do we jump when pressing jump and letting go immediately
+var baseHeight : float = 1.0;
 
-	// We add extraHeight units (meters) on top when holding the button down longer while jumping
-	var extraHeight : float = 4.1;
+// We add extraHeight units (meters) on top when holding the button down longer while jumping
+var extraHeight : float = 4.1;
 
-	// How much does the character jump out perpendicular to the surface on walkable surfaces?
-	// 0 means a fully vertical jump and 1 means fully perpendicular.
-	var perpAmount : float = 0.0;
+// How much does the character jump out perpendicular to the surface on walkable surfaces?
+// 0 means a fully vertical jump and 1 means fully perpendicular.
+var perpAmount : float = 0.0;
 
-	// How much does the character jump out perpendicular to the surface on too steep surfaces?
-	// 0 means a fully vertical jump and 1 means fully perpendicular.
-	var steepPerpAmount : float = 0.5;
+// How much does the character jump out perpendicular to the surface on too steep surfaces?
+// 0 means a fully vertical jump and 1 means fully perpendicular.
+var steepPerpAmount : float = 0.5;
 
-	// For the next variables, @System.NonSerialized tells Unity to not serialize the variable or show it in the inspector view.
-	// Very handy for organization!
+// For the next variables, @System.NonSerialized tells Unity to not serialize the variable or show it in the inspector view.
+// Very handy for organization!
 
-	// Are we jumping? (Initiated with jump button and not grounded yet)
-	// To see if we are just in the air (initiated by jumping OR falling) see the grounded variable.
-	@System.NonSerialized
-	var jumping : boolean = false;
+// Are we jumping? (Initiated with jump button and not grounded yet)
+// To see if we are just in the air (initiated by jumping OR falling) see the grounded variable.
+@System.NonSerialized
+var jumping : boolean = false;
 
-	@System.NonSerialized
-	var holdingJumpButton : boolean = false;
+@System.NonSerialized
+var holdingJumpButton : boolean = false;
 
-	// the time we jumped at (Used to determine for how long to apply extra jump power after jumping.)
-	@System.NonSerialized
-	var lastStartTime : float = 0.0;
+// the time we jumped at (Used to determine for how long to apply extra jump power after jumping.)
+@System.NonSerialized
+var lastStartTime : float = 0.0;
 
-	@System.NonSerialized
-	var lastButtonDownTime : float = -100;
+@System.NonSerialized
+var lastButtonDownTime : float = -100;
 
-	@System.NonSerialized
-	var jumpDir : Vector3 = Vector3.up;
+@System.NonSerialized
+var jumpDir : Vector3 = Vector3.up;
 }
 
 var jumping : CharacterMotorJumping = CharacterMotorJumping();
@@ -114,34 +123,34 @@ var jumping : CharacterMotorJumping = CharacterMotorJumping();
 class CharacterMotorMovingPlatform {
 	var enabled : boolean = true;
 
-	var movementTransfer : MovementTransferOnJump = MovementTransferOnJump.PermaTransfer;
+var movementTransfer : MovementTransferOnJump = MovementTransferOnJump.PermaTransfer;
 
-	@System.NonSerialized
-	var hitPlatform : Transform;
+@System.NonSerialized
+var hitPlatform : Transform;
 
-	@System.NonSerialized
-	var activePlatform : Transform;
+@System.NonSerialized
+var activePlatform : Transform;
 
-	@System.NonSerialized
-	var activeLocalPoint : Vector3;
+@System.NonSerialized
+var activeLocalPoint : Vector3;
 
-	@System.NonSerialized
-	var activeGlobalPoint : Vector3;
+@System.NonSerialized
+var activeGlobalPoint : Vector3;
 
-	@System.NonSerialized
-	var activeLocalRotation : Quaternion;
+@System.NonSerialized
+var activeLocalRotation : Quaternion;
 
-	@System.NonSerialized
-	var activeGlobalRotation : Quaternion;
+@System.NonSerialized
+var activeGlobalRotation : Quaternion;
 
-	@System.NonSerialized
-	var lastMatrix : Matrix4x4;
+@System.NonSerialized
+var lastMatrix : Matrix4x4;
 
-	@System.NonSerialized
-	var platformVelocity : Vector3;
+@System.NonSerialized
+var platformVelocity : Vector3;
 
-	@System.NonSerialized
-	var newPlatform : boolean;
+@System.NonSerialized
+var newPlatform : boolean;
 }
 
 var movingPlatform : CharacterMotorMovingPlatform = CharacterMotorMovingPlatform();
@@ -150,16 +159,16 @@ class CharacterMotorSliding {
 	// Does the character slide on too steep surfaces?
 	var enabled : boolean = true;
 
-	// How fast does the character slide on steep surfaces?
-	var slidingSpeed : float = 15;
+// How fast does the character slide on steep surfaces?
+var slidingSpeed : float = 15;
 
-	// How much can the player control the sliding direction?
-	// If the value is 0.5 the player can slide sideways with half the speed of the downwards sliding speed.
-	var sidewaysControl : float = 1.0;
+// How much can the player control the sliding direction?
+// If the value is 0.5 the player can slide sideways with half the speed of the downwards sliding speed.
+var sidewaysControl : float = 1.0;
 
-	// How much can the player influence the sliding speed?
-	// If the value is 0.5 the player can speed the sliding up to 150% or slow it down to 50%.
-	var speedControl : float = 0.4;
+// How much can the player influence the sliding speed?
+// If the value is 0.5 the player can speed the sliding up to 150% or slow it down to 50%.
+var speedControl : float = 0.4;
 }
 
 var sliding : CharacterMotorSliding = CharacterMotorSliding();
@@ -200,14 +209,14 @@ private function UpdateFunction () {
 			controller.Move(moveDistance);
 
 		// Support moving platform rotation as well:
-        var newGlobalRotation : Quaternion = movingPlatform.activePlatform.rotation * movingPlatform.activeLocalRotation;
-        var rotationDiff : Quaternion = newGlobalRotation * Quaternion.Inverse(movingPlatform.activeGlobalRotation);
+		var newGlobalRotation : Quaternion = movingPlatform.activePlatform.rotation * movingPlatform.activeLocalRotation;
+		var rotationDiff : Quaternion = newGlobalRotation * Quaternion.Inverse(movingPlatform.activeGlobalRotation);
 
-        var yRotation = rotationDiff.eulerAngles.y;
-        if (yRotation != 0) {
-	        // Prevent rotation of the local up vector
-	        tr.Rotate(0, yRotation, 0);
-        }
+		var yRotation = rotationDiff.eulerAngles.y;
+		if (yRotation != 0) {
+			// Prevent rotation of the local up vector
+			tr.Rotate(0, yRotation, 0);
+		}
 	}
 
 	// Save lastPosition for velocity calculation.
@@ -226,7 +235,7 @@ private function UpdateFunction () {
 	movingPlatform.hitPlatform = null;
 	groundNormal = Vector3.zero;
 
-   	// Move our character!
+	// Move our character!
 	movement.collisionFlags = controller.Move (currentMovementOffset);
 
 	movement.lastHitPoint = movement.hitPoint;
@@ -276,8 +285,8 @@ private function UpdateFunction () {
 		// Apply inertia from platform
 		if (movingPlatform.enabled &&
 			(movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
-			movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
-		) {
+			 movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
+		   ) {
 			movement.frameVelocity = movingPlatform.platformVelocity;
 			movement.velocity += movingPlatform.platformVelocity;
 		}
@@ -304,8 +313,8 @@ private function UpdateFunction () {
 		movingPlatform.activeLocalPoint = movingPlatform.activePlatform.InverseTransformPoint(movingPlatform.activeGlobalPoint);
 
 		// Support moving platform rotation as well:
-        movingPlatform.activeGlobalRotation = tr.rotation;
-        movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation;
+		movingPlatform.activeGlobalRotation = tr.rotation;
+		movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation;
 	}
 }
 
@@ -335,6 +344,7 @@ function FixedUpdate () {
 function Update () {
 	if (!useFixedUpdate)
 		UpdateFunction();
+	UpdateLeanOLD();
 }
 
 private function ApplyInputVelocityChange (velocity : Vector3) {
@@ -443,8 +453,8 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 			// Apply inertia from platform
 			if (movingPlatform.enabled &&
 				(movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
-				movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
-			) {
+				 movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
+			   ) {
 				movement.frameVelocity = movingPlatform.platformVelocity;
 				velocity += movingPlatform.platformVelocity;
 			}
@@ -477,8 +487,8 @@ private function SubtractNewPlatformVelocity () {
 	// since movement in ground is relative to the movement of the ground.
 	if (movingPlatform.enabled &&
 		(movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
-		movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
-	) {
+		 movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
+	   ) {
 		// If we landed on a new platform, we have to wait for two FixedUpdates
 		// before we know the velocity of the platform under the character
 		if (movingPlatform.newPlatform) {
@@ -569,6 +579,8 @@ function MaxSpeedInDirection (desiredMovementDirection : Vector3) : float {
 	var CurrentmaxForwardSpeed = movement.maxForwardSpeed;
 	if (Input.GetButton("Sprint"))
 		CurrentmaxForwardSpeed = movement.maxForwardSprintSpeed;
+	if(Playercontroller.height < 0.5)
+		CurrentmaxForwardSpeed = movement.maxForwardSneakSpeed;
 	if (desiredMovementDirection == Vector3.zero)
 		return 0;
 	else {
@@ -589,3 +601,30 @@ function SetVelocity (velocity : Vector3) {
 // Require a character controller to be attached to the same game object
 @script RequireComponent (CharacterController)
 @script AddComponentMenu ("Character/Character Motor")
+
+
+function UpdateLean(){
+	if(Input.GetButton("Lean Left")){
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 20);
+	}
+	else if(Input.GetButton("Lean Right")){
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y,-20);
+	}
+	else{
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 0);
+	}
+
+}
+
+function UpdateLeanOLD(){
+	if(Input.GetButton("Lean Left")){
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 20);
+	}
+	else if(Input.GetButton("Lean Right")){
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y,-20);
+	}
+	else{
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 0);
+	}
+
+}

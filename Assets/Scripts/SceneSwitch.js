@@ -1,4 +1,4 @@
-﻿#pragma strict
+#pragma strict
 
 public var LoadScene : String;
 public var TextBoxText : String;
@@ -9,22 +9,22 @@ private var ShowTextBox = false;
 
 
 function OnTriggerEnter (player : Collider) {
-  if(player.gameObject.tag == "Player")
-    ShowTextBox = true;
+	if(player.gameObject.tag == "Player")
+		ShowTextBox = true;
 }
 function OnTriggerExit(player : Collider){
-  if(player.gameObject.tag == "Player")
-    ShowTextBox = false;
+	if(player.gameObject.tag == "Player")
+		ShowTextBox = false;
 }
 
 function OnGUI () {
-  if (ShowTextBox){
-    GUI.Box (Rect (Screen.width/2-100,Screen.height/2-75,200,150), TextBoxText);
-  }
+	if (ShowTextBox){
+		GUI.Box (Rect (Screen.width/2-100,Screen.height/2-75,200,150), TextBoxText);
+	}
 }
 function Update(){
-  if(ShowTextBox && Input.GetButtonDown("Submit")){
-    print("Loading level: "+LoadScene);
-    Application.LoadLevel (LoadScene);
-  }
+	if(ShowTextBox && Input.GetButtonDown("Submit")){
+		print("Loading level: "+LoadScene);
+		Application.LoadLevel (LoadScene);
+	}
 }
