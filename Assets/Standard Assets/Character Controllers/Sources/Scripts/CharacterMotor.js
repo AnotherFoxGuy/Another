@@ -602,20 +602,6 @@ function SetVelocity (velocity : Vector3) {
 @script RequireComponent (CharacterController)
 @script AddComponentMenu ("Character/Character Motor")
 
-
-function UpdateLean(){
-	if(Input.GetButton("Lean Left")){
-		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 20);
-	}
-	else if(Input.GetButton("Lean Right")){
-		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y,-20);
-	}
-	else{
-		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 0);
-	}
-
-}
-
 function UpdateLeanOLD(){
 	if(Input.GetButton("Lean Left")){
 		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 20);
@@ -626,5 +612,18 @@ function UpdateLeanOLD(){
 	else{
 		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 0);
 	}
+}
 
+function UpdateLean(){
+	if(Input.GetButton("Lean Left")){
+		transform.Rotate(Vector3.forward*25* Time.deltaTime);
+	}
+	else if(Input.GetButton("Lean Right")){
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y,-20);
+	}
+	/*
+	else{
+		this.transform.eulerAngles = Vector3(0, this.transform.eulerAngles.y, 0);
+	}
+	*/
 }

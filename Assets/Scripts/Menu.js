@@ -21,7 +21,6 @@ function Update () {
 function OnGUI () {
 	if(GUIText.enabled){
 		GUI.Label (Rect (Screen.width/2,Screen.height/2-40,80,20),"Quit ?");
-
 		if (GUI.Button (Rect (Screen.width/2+50,Screen.height/2,80,20), "No")) {
 			GUIText.enabled = !GUIText.enabled;
 			Screen.showCursor = !Screen.showCursor;

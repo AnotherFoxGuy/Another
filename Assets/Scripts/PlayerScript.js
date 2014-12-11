@@ -28,7 +28,7 @@ function Update(){
 	var ray = Camera.main.transform.position;
 	var hit : RaycastHit;
 	var tmpPos = Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
-	if (Physics.Raycast (tmpPos,transform.TransformDirection(Vector3.forward), hit, 5)){
+	if (Physics.Raycast (tmpPos,transform.TransformDirection(Vector3.forward), hit, 2)){
 		Debug.DrawLine (tmpPos, hit.point);
 		if(hit.transform.tag == "Key" || hit.transform.tag == "FlashLight" ||  hit.transform.tag == "Battery"){
 			ShowTextBox = true;
