@@ -145,15 +145,22 @@ function UpdateCheats() {
 			GodModeProgress = 0;
 		}
 	}
-	if (GodModeProgress == 0 && Input.GetKeyDown('g')) {
+	if (GodModeProgress == 0 && Input.GetKeyDown('e')) {
 		++GodModeProgress;
 		CheatDelay = 1.0;
-	} else if (GodModeProgress == 1 && Input.GetKeyDown('o')) {
+	} else if (GodModeProgress == 1 && Input.GetKeyDown('d')) {
 		++GodModeProgress;
 		CheatDelay = 1.0;
-	} else if (GodModeProgress == 2 && Input.GetKeyDown('d')) {
+	} else if (GodModeProgress == 2 && Input.GetKeyDown('g')) {
+		++GodModeProgress;
+		CheatDelay = 1.0;
+	} else if (GodModeProgress == 3 && Input.GetKeyDown('a')) {
+		++GodModeProgress;
+		CheatDelay = 1.0;
+	} else if (GodModeProgress == 4 && Input.GetKeyDown('r')) {
 		GodModeProgress = 0;
 		PlaySoundIfNotPlaying(SoundDead);
 		GodMode = !GodMode;
+		print("GodMode On!");
 	}
 }
