@@ -56,10 +56,15 @@ function Update(){
 			ShowTextBox = false;
 		}
 		if(Input.GetButtonDown("Submit")){
-			if(hit.transform.tag == "Key" || hit.transform.tag == "Book"){
+			if(hit.transform.tag == "Key"){
 				Destroy (hit.collider.gameObject);
 				InventoryArr.Push(hit.collider.name);
 				Inventory.Add(hit.collider.name,InventoryArr.length);
+				IndexInventory();
+			}
+			else if(hit.transform.tag == "Book"){
+				Destroy (hit.collider.gameObject);
+				InventoryArr.Push(hit.collider.name);
 				IndexInventory();
 			}
 			else if(hit.transform.tag == "FlashLight"){

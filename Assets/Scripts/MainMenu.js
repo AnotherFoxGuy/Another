@@ -4,14 +4,23 @@ var btnStartTexture : Texture;
 var btnMenuTexture : Texture;
 var btnExitTexture : Texture;
 
+private var LoadingScreen: GameObject;
+private var GUIText : GUITexture;
 
+function Start() {
+	LoadingScreen = GameObject.Find("ZZZZZ_LoadingScreen");
+	GUIText = LoadingScreen.GetComponent(GUITexture);
+}
 
 function OnGUI () {
-	GUI.Box (Rect (50,50,Screen.width/4,Screen.height-100), "Another");
-	if (GUI.Button(Rect(100,Screen.height-240,Screen.width/5,50),"Start game")){
-		Application.LoadLevel(1);
-	}
-	if (GUI.Button(Rect(100,Screen.height-170,Screen.width/5,50),"Quit")){
-		Application.Quit();
+	if(!GUIText.enabled ){
+		GUI.Box (Rect (50,50,Screen.width/4,Screen.height-100), "Another");
+		if (GUI.Button(Rect(100,Screen.height-240,Screen.width/5,50),"Start game")){
+			GUIText.enabled = true;
+			Application.LoadLevel(1);
+		}
+		if (GUI.Button(Rect(100,Screen.height-170,Screen.width/5,50),"Quit")){
+			Application.Quit();
+		}
 	}
 }

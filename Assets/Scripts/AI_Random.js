@@ -109,7 +109,7 @@ function Update() {
 }
 
 function OnGUI() {
-	GUI.Box(Rect(Screen.width - 200, 25, 200, 60), CurrText);
+	//GUI.Box(Rect(Screen.width - 200, 25, 200, 60), CurrText);
 	if (Killed) {
 		GUI.Box(Rect(Screen.width / 2 - 100, Screen.height / 2 - 30, 200, 60), "you are dead!");
 		PlaySoundIfNotPlaying(SoundDead);
@@ -162,7 +162,7 @@ function UpdateCheats() {
 		CheatDelay = 1.0;
 	} else if (GodModeProgress == 4 && Input.GetKeyDown('r')) {
 		GodModeProgress = 0;
-		PlaySoundIfNotPlaying(SoundDead);
+		audio.PlayOneShot(SoundDead , 1);
 		GodMode = !GodMode;
 		print("GodMode On!");
 	}
