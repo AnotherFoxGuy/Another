@@ -14,19 +14,19 @@ function Start () {
 function Update () {
 	if(Input.GetButtonDown("Escape")){
 		GUIText.enabled = !GUIText.enabled;
-		Screen.showCursor = !Screen.showCursor;
+		//Screen.showCursor = !Screen.showCursor;
 	}
 }
 
 function OnGUI () {
 	if(GUIText.enabled){
+		Time.timeScale = 0;
 		GUI.Label (Rect (Screen.width/2,Screen.height/2-40,80,20),"Quit ?");
-		if (GUI.Button (Rect (Screen.width/2+50,Screen.height/2,80,20), "No")) {
-			GUIText.enabled = !GUIText.enabled;
-			Screen.showCursor = !Screen.showCursor;
-		}
-		if (GUI.Button (Rect (Screen.width/2-50,Screen.height/2,80,20), "Yes") || Input.GetButtonDown("Submit")) {
+		if (Input.GetButtonDown("Submit")) {
 			Application.Quit();
 		}
+	}
+	else{
+		Time.timeScale = 1;
 	}
 }

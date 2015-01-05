@@ -1,17 +1,13 @@
 #pragma strict
 
-var btnStartTexture : Texture;
-var btnMenuTexture : Texture;
-var btnExitTexture : Texture;
-
 private var LoadingScreen: GameObject;
-private var GUIText : GUITexture;
+private var LoadingScreenGUIText : GUITexture;
 
 function Start() {
 	LoadingScreen = GameObject.Find("ZZZZZ_LoadingScreen");
-	GUIText = LoadingScreen.GetComponent(GUITexture);
+	LoadingScreenGUIText = LoadingScreen.GetComponent(GUITexture);
 }
-
+/*
 function OnGUI () {
 	if(!GUIText.enabled ){
 		GUI.Box (Rect (50,50,Screen.width/4,Screen.height-100), "Another");
@@ -23,4 +19,14 @@ function OnGUI () {
 			Application.Quit();
 		}
 	}
+}
+*/
+
+function StartGame () {
+	LoadingScreenGUIText.enabled = true;
+	Application.LoadLevel(1);
+}
+
+function ExitGame(){
+	Application.Quit();
 }
